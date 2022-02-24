@@ -34,26 +34,21 @@ namespace SudokuModel
                 }
             }
         }
-        public void ReadFromFile(string file)
+        public void ReadFromFile()
         {
-            FileStream fs = File.Open(file, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            StreamReader sr = new StreamReader(fs);
-            string s;
-            while ((s = sr.ReadLine()) != null)
-            {
-                int[,] setka = new int[9, 9];
-                for (int i = 0; i < 9; i++)
-                {
-                    string ciferki = string.Empty;
-                    for (int j = 0; j < 9; j++)
-                    {
-                        ciferki += setka[i, j] + " ";
-                    }
-                }
+            String input = File.ReadAllText(@"D:\Programavimas\C#\SudokuSolution\SudokuModel\bin\Debug\Pradzia.txt");
 
+            int i = 0, j;
+            foreach (var row in input.Split('\n'))
+            {
+                j = 0;
+                foreach (var col in row.Split(','))
+                {
+                    setka[i, j] = int.Parse(col);
+                    j++;
+                }
+                i++;
             }
-            fs.Close();
         }
     }
-
 }

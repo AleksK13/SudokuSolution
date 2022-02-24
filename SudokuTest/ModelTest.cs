@@ -19,7 +19,7 @@ namespace SudokuTest
         public void CheckValidSolution()
         {
             var grid = new Grid();
-            grid.ReadFromFile("Pradzia.txt");
+            grid.ReadFromFile();
             grid.PrintToConsole();
             Assert.AreEqual(0, grid.setka[3, 3]);
         }
