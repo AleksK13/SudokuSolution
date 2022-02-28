@@ -49,31 +49,28 @@ namespace SudokuSolution
                         if (v == 0)
                         {
                             flag = true;
-                            int z = -1;
-                            for (int i = 0; i < 9; i++)
-                            {
-                                uint mask = (uint)1 << i;
-                                bool allOk = ((row[x] | col[y] | sqr[GetSqrIndex(x, y)]) & mask) == 0;
-                                if (allOk && z < 0)
-                                {
-                                    z = i;
-                                }
-                                else if (allOk)
-                                {
-                                    goto next;//tut ostanovilisj
-                                }
+                            uint z = (row[x] & col[y] & sqr[GetSqrIndex(x, y)]);
+                            double rez = Math.Log(z,2);
+                            if (rez%1==0){
+                                v= (int)rez;
                             }
-                        }
-                        uint mask = (uint)1 << v - 1;
 
-                        bool allOk = ((row[x] | col[y] | sqr[GetSqrIndex(x, y)]) & mask) == 0;
-                        if (!allOk)
-                        {
-                            throw new Exception("Invalid input!!!");
+                             
                         }
-                        row[x] |= mask;
-                        col[y] |= mask;
-                        sqr[GetSqrIndex(x, y)] |= mask;
+
+                        if(v!=0){
+
+                            uint mask = (uint)1 << v - 1;
+
+                            bool allOk = ((row[x] | col[y] | sqr[GetSqrIndex(x, y)]) & mask) == 0;
+                            if (!allOk)
+                            {
+                                throw new Exception("Invalid input!!!");
+                            }
+                            row[x] |= mask;
+                            col[y] |= mask;
+                            sqr[GetSqrIndex(x, y)] |= mask;
+                        }
                     }
                 }
             }
