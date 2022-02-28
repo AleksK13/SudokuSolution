@@ -27,13 +27,14 @@ namespace SudokuTest
         public void TestBitov()
         {
             int x, y;
-            x = 1;//riady
-            y = 1;//kolonki
+            x = 1; //row
+            y = 1; //colums
             int c = 7;
 
             uint[] row = new uint[9];
             uint[] col = new uint[9];
             uint[] sqr = new uint[9];
+
             uint mask = (uint)1 << c - 1;
             Console.WriteLine($"mask :  {Convert.ToString(mask, toBase: 2)}");
             row[x - 1] |= mask;
@@ -41,18 +42,18 @@ namespace SudokuTest
             sqr[GetSqrIndex(x, y)] |= mask;
 
             y = 2;
-            mask = (uint)1 << (c - 1);
-            bool rowok = (row[x - 1] & mask) == 0;//proverka poljzovalisj li chislom "c" v opredelionnom riadu "x"
+            mask = (uint)1 << (c - 1);//nado?
+            bool rowok = (row[x - 1] & mask) == 0;//checks if "c" was used in row "x"
             Console.WriteLine($"row :  {Convert.ToString(row[x - 1], toBase: 2).PadLeft(9, '0')}");
             Console.WriteLine($"mask:  {Convert.ToString(mask, toBase: 2).PadLeft(9, '0')}");
             Console.WriteLine($"{rowok}");
 
-            bool colok = (col[y - 1] & mask) == 0;//proverka poljzovalisj li chislom "c" v opredelionnom stolbike "y"
+            bool colok = (col[y - 1] & mask) == 0;////checks if "c" was used in column "y"
             Console.WriteLine($"col :  {Convert.ToString(col[y - 1], toBase: 2).PadLeft(9, '0')}");
             Console.WriteLine($"mask:  {Convert.ToString(mask, toBase: 2).PadLeft(9, '0')}");
             Console.WriteLine($"{colok}");
 
-            bool sqrok = (sqr[GetSqrIndex(x, y)] & mask) == 0;//proverka poljzovalisj li chislom "c" v opredelionnom stolbike "y"
+            bool sqrok = (sqr[GetSqrIndex(x, y)] & mask) == 0;////checks if "c" was ued in square 
             Console.WriteLine($"sqr :  {Convert.ToString(sqr[GetSqrIndex(x, y)], toBase: 2).PadLeft(9, '0')}");
             Console.WriteLine($"mask:  {Convert.ToString(mask, toBase: 2).PadLeft(9, '0')}");
             Console.WriteLine($"{sqrok}");
