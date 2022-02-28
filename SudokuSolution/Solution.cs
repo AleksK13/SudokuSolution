@@ -49,33 +49,39 @@ namespace SudokuSolution
                         if (v == 0)
                         {
                             flag = true;
-                            uint z = (row[x] & col[y] & sqr[GetSqrIndex(x, y)]);
-                            double rez = Math.Log(z,2);
-                            if (rez%1==0){
-                                v= (int)rez;
-                            }
-
-                             
-                        }
-
-                        if(v!=0){
-
-                            uint mask = (uint)1 << v - 1;
-
-                            bool allOk = ((row[x] | col[y] | sqr[GetSqrIndex(x, y)]) & mask) == 0;
-                            if (!allOk)
+                            uint z = (~row[x] & ~col[y] & ~sqr[GetSqrIndex(x, y)]) & 0b111111111;
+                            double rez = Math.Log(z, 2);
+                            if (rez % 1 == 0)
                             {
-                                throw new Exception("Invalid input!!!");
+                                v = (int)rez + 1;
                             }
-                            row[x] |= mask;
-                            col[y] |= mask;
-                            sqr[GetSqrIndex(x, y)] |= mask;
+
+                            if (v != 0)
+                            {
+                                uint mask = (uint)1 << v - 1;
+
+                                bool allOk = ((row[x] | col[y] | sqr[GetSqrIndex(x, y)]) & mask) == 0;
+                                if (!allOk)
+                                {
+                                    Console.WriteLine($"mask:  {Convert.ToString(mask, toBase: 2).PadLeft(9, '0')}");
+                                    Console.WriteLine($"row :  {Convert.ToString(row[x], toBase: 2).PadLeft(9, '0')}");
+                                    Console.WriteLine($"col :  {Convert.ToString(col[y], toBase: 2).PadLeft(9, '0')}");
+                                    Console.WriteLine($"sqr :  {Convert.ToString(sqr[GetSqrIndex(x, y)], toBase: 2).PadLeft(9, '0')}");
+                                    throw new Exception("Invalid input!!!");
+                                }
+                                row[x] |= mask;
+                                col[y] |= mask;
+                                sqr[GetSqrIndex(x, y)] |= mask;
+                                GridObj.setka[x, y] = v;
+                            }
                         }
+
+
                     }
                 }
+               
             }
-
-
+            GridObj.PrintToConsole();
         }
         private static int GetSqrIndex(int x, int y)
         {

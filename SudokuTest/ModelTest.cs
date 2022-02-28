@@ -42,7 +42,6 @@ namespace SudokuTest
             sqr[GetSqrIndex(x, y)] |= mask;
 
             y = 2;
-            mask = (uint)1 << (c - 1);//nado?
             bool rowok = (row[x - 1] & mask) == 0;//checks if "c" was used in row "x"
             Console.WriteLine($"row :  {Convert.ToString(row[x - 1], toBase: 2).PadLeft(9, '0')}");
             Console.WriteLine($"mask:  {Convert.ToString(mask, toBase: 2).PadLeft(9, '0')}");
@@ -53,7 +52,7 @@ namespace SudokuTest
             Console.WriteLine($"mask:  {Convert.ToString(mask, toBase: 2).PadLeft(9, '0')}");
             Console.WriteLine($"{colok}");
 
-            bool sqrok = (sqr[GetSqrIndex(x, y)] & mask) == 0;////checks if "c" was ued in square 
+            bool sqrok = (sqr[GetSqrIndex(x, y)] & mask) == 0;////checks if "c" was used in square 
             Console.WriteLine($"sqr :  {Convert.ToString(sqr[GetSqrIndex(x, y)], toBase: 2).PadLeft(9, '0')}");
             Console.WriteLine($"mask:  {Convert.ToString(mask, toBase: 2).PadLeft(9, '0')}");
             Console.WriteLine($"{sqrok}");
