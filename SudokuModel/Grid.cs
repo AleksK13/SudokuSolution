@@ -34,7 +34,7 @@ namespace SudokuModel
                 }
             }
         }
-        public void ReadFromFile()
+        public int[,] ReadFromFile()
         {
             String input = File.ReadAllText(@"D:\Programavimas\C#\SudokuSolution\SudokuModel\bin\Debug\Pradzia.txt");
 
@@ -49,6 +49,8 @@ namespace SudokuModel
                 }
                 i++;
             }
+
+            return setka;
         }
     }
 }

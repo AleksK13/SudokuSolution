@@ -21,7 +21,7 @@ namespace SudokuTest
             var grid = new Grid();
             grid.ReadFromFile();
             grid.PrintToConsole();
-            Assert.AreEqual(0, grid.setka[3, 3]);
+            Assert.AreEqual(7, grid.setka[3, 3]);
         }
     }
 }
