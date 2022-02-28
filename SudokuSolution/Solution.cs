@@ -21,7 +21,7 @@ namespace SudokuSolution
                 for (int y = 0; y < 9; y++)
                 {
                     int v = GridObj.setka[x, y];
-                    if (v==0)
+                    if (v == 0)
                     {
                         continue;
                     }
@@ -35,6 +35,46 @@ namespace SudokuSolution
                     row[x] |= mask;
                     col[y] |= mask;
                     sqr[GetSqrIndex(x, y)] |= mask;
+                }
+            }
+            bool flag = true;
+            while (flag)
+            {
+                flag = false;
+                for (int x = 0; x < 9; x++)
+                {
+                    for (int y = 0; y < 9; y++)
+                    {
+                        int v = GridObj.setka[x, y];
+                        if (v == 0)
+                        {
+                            flag = true;
+                            int z = -1;
+                            for (int i = 0; i < 9; i++)
+                            {
+                                uint mask = (uint)1 << i;
+                                bool allOk = ((row[x] | col[y] | sqr[GetSqrIndex(x, y)]) & mask) == 0;
+                                if (allOk && z < 0)
+                                {
+                                    z = i;
+                                }
+                                else if (allOk)
+                                {
+                                    goto next;//tut ostanovilisj
+                                }
+                            }
+                        }
+                        uint mask = (uint)1 << v - 1;
+
+                        bool allOk = ((row[x] | col[y] | sqr[GetSqrIndex(x, y)]) & mask) == 0;
+                        if (!allOk)
+                        {
+                            throw new Exception("Invalid input!!!");
+                        }
+                        row[x] |= mask;
+                        col[y] |= mask;
+                        sqr[GetSqrIndex(x, y)] |= mask;
+                    }
                 }
             }
 
