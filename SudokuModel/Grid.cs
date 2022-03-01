@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Diagnostics;
 
 namespace SudokuModel
 {
@@ -36,7 +37,7 @@ namespace SudokuModel
         }
         public void ReadFromFile()
         {
-            String input = File.ReadAllText(@"D:\Programavimas\C#\SudokuSolution\SudokuModel\bin\Debug\Pradzia.txt");
+            String input = File.ReadAllText(@"Pradzia.txt");
 
             int i = 0, j;
             foreach (var row in input.Split('\n'))
@@ -50,6 +51,18 @@ namespace SudokuModel
                 i++;
             }
 
+        }
+        public void PrintToDebug()
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                string ciferki = string.Empty;
+                for (int j = 0; j < 9; j++)
+                {
+                    ciferki += setka[i, j] + " ";
+                }
+                Debug.WriteLine(ciferki);
+            }
         }
     }
 }

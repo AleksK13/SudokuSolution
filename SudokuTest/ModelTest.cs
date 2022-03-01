@@ -13,7 +13,7 @@ namespace SudokuTest
             var grid = new Grid();
             grid.FillRandomGrid();
             grid.PrintToConsole();
-            Assert.AreEqual(3, grid.setka[3, 3]);
+            Assert.AreEqual(0, grid.setka[3, 3]);
         }
         [TestMethod]
         public void CheckValidSolution()
@@ -21,7 +21,7 @@ namespace SudokuTest
             var grid = new Grid();
             grid.ReadFromFile();
             grid.PrintToConsole();
-            Assert.AreEqual(7, grid.setka[3, 3]);
+            Assert.AreEqual(0, grid.setka[3, 3]);
         }
         [TestMethod]
         public void TestBitov()
@@ -39,6 +39,7 @@ namespace SudokuTest
             Console.WriteLine($"mask :  {Convert.ToString(mask, toBase: 2)}");
             row[x - 1] |= mask;
             col[y - 1] |= mask;
+            row[x - 1] |= mask >> 1;
             sqr[GetSqrIndex(x, y)] |= mask;
 
             y = 2;
