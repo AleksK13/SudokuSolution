@@ -11,40 +11,42 @@ namespace SudokuSolution
 {
     public class Solution
     {
+        //3 list of 9 int lists
         private static List<int>[] rowList = new List<int>[9];
         private static List<int>[] colList = new List<int>[9];
         private static List<int>[] sqrList = new List<int>[9];
-
+        //static constructor to initialise all lists
+        static Solution()
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                rowList[i] = new List<int>();
+                colList[i] = new List<int>();
+                sqrList[i] = new List<int>();
+            }
+        }
+        //writing value to cell by "x" or "y" in 
         private static bool SetCell(int x, int y, int value)
         {
+            //get list of numbers already used in row "x"
             List<int> row = rowList[x];
-            if (row == null)
-            {
-                row = new List<int>();
-                rowList[x] = row;
-            }
 
+            //get list of numbers already used in column "y"
             List<int> col = colList[y];
-            if (col == null)
-            {
-                col = new List<int>();
-                colList[y] = col;
-            }
 
+            //get list of numbers already used in the same box as the cell in "x,y" coords
             List<int> sqr = sqrList[GetSqrIndex(x, y)];
-            if (sqr == null)
-            {
-                sqr = new List<int>();
-                sqrList[GetSqrIndex(x, y)] = sqr;
-            }
 
+            //cheking if row column and box contains our value
             bool rowOk = !row.Contains(value);
             bool colOk = !col.Contains(value);
             bool sqrOk = !sqr.Contains(value);
+            //check if the value not presents in the lists
             bool allOk = (rowOk && colOk && sqrOk);
 
             if (allOk)
             {
+                // adds value to lists to mark as used in this row, column, and box
                 row.Add(value);
                 col.Add(value);
                 sqr.Add(value);
@@ -53,10 +55,7 @@ namespace SudokuSolution
         }
         public static void SolveGrid(Grid GridObj)
         {
-            //uint[] row = new uint[9];
-            //uint[] col = new uint[9];
-            //uint[] sqr = new uint[9];
-
+            //marks all used values from input Grid
             for (int x = 0; x < 9; x++)
             {
                 for (int y = 0; y < 9; y++)
@@ -66,24 +65,19 @@ namespace SudokuSolution
                     {
                         continue;
                     }
-                    //uint mask = (uint)1 << v - 1;
 
-                    //bool allOk = ((row[x] | col[y] | sqr[GetSqrIndex(x, y)]) & mask) == 0;
                     bool allOk = SetCell(x, y, v);
                     if (!allOk)
                     {
                         throw new Exception("Invalid input!!!");
                     }
-                    //row[x] |= mask;
-                    //col[y] |= mask;
-                    //sqr[GetSqrIndex(x, y)] |= mask;
                 }
             }
+            ////
             bool flag = true;
             while (flag)
             {
                 flag = false;
-                bool flag1 = false;
                 for (int x = 0; x < 9; x++)
                 {
                     for (int y = 0; y < 9; y++)
@@ -91,57 +85,56 @@ namespace SudokuSolution
                         int v = GridObj.setka[x, y];
                         if (v == 0)
                         {
-                            flag = true;
-                            //uint z = (~row[x] & ~col[y] & ~sqr[GetSqrIndex(x, y)]) & 0b111111111;
-                            //double rez = Math.Log(z, 2);
-                            //if (rez % 1 == 0)
-                            //{
-                            //    v = (int)rez + 1;
-                            //}
-                            //////////////////
                             int[] res = GetValidGueses(x, y);
-
                             if (res.Length == 1)
                             {
                                 v = res[0];
                             }
                             else
                             {
+                                //calculating box first cell coords
                                 var rowStart = (x / 3) * 3;
                                 var colStart = (y / 3) * 3;
                                 foreach (var item in res)
                                 {
                                     bool notRepeats = true;
+                                    //Check all empty cells in current box if they can contain item value
                                     for (int i = rowStart; i < rowStart + 3; i++)
                                     {
-
                                         for (int j = colStart; j < colStart + 3; j++)
                                         {
+                                            //skip current cell
                                             if (i == x && j == y)
                                             {
                                                 continue;
                                             }
+                                            //skip all cells with values
                                             if (GridObj.setka[i, j] != 0)
                                             {
                                                 continue;
                                             }
                                             notRepeats = notRepeats && (colList[j].Contains(item) || rowList[i].Contains(item));
                                         }
-
                                     }
+                                    //if not repeats then item is answer
                                     if (notRepeats)
                                     {
                                         v = item;
                                         break;
                                     }
                                     notRepeats = true;
+                                    //cheks if item can be placed in any of empty cells in current row
                                     for (int i = 0; i < 9; i++)
                                     {
                                         if (GridObj.setka[x, i] == 0)
                                         {
-                                            if (i != y)
+                                            if (i != y && GetSqrIndex(x, y) != GetSqrIndex(x, i))
                                             {
                                                 notRepeats = notRepeats && (colList[i].Contains(item) || sqrList[GetSqrIndex(x, i)].Contains(item));
+                                            }
+                                            else if (i != y)
+                                            {
+                                                notRepeats = notRepeats && colList[i].Contains(item);
                                             }
                                         }
                                     }
@@ -151,13 +144,18 @@ namespace SudokuSolution
                                         break;
                                     }
                                     notRepeats = true;
+                                    //cheks if item can be placed in any of empty cells in current column
                                     for (int i = 0; i < 9; i++)
                                     {
                                         if (GridObj.setka[i, y] == 0)
                                         {
-                                            if (i != x)
+                                            if (i != x && GetSqrIndex(x, y) != GetSqrIndex(i, y))
                                             {
                                                 notRepeats = notRepeats && (rowList[i].Contains(item) || sqrList[GetSqrIndex(i, y)].Contains(item));
+                                            }
+                                            else if (i != x)
+                                            {
+                                                notRepeats = notRepeats && rowList[i].Contains(item);
                                             }
                                         }
                                     }
@@ -179,61 +177,32 @@ namespace SudokuSolution
                                     }
                                 }
                             }
-                            //////////////////////
+                            //if we made a guess
                             if (v != 0)
                             {
-                                //uint mask = (uint)1 << v - 1;
-
-                                //bool allOk = ((row[x] | col[y] | sqr[GetSqrIndex(x, y)]) & mask) == 0;
+                                //updates our list with our guess
                                 bool allOk = SetCell(x, y, v);
                                 if (!allOk)
                                 {
-                                    //Console.WriteLine($"mask:  {Convert.ToString(mask, toBase: 2).PadLeft(9, '0')}");
-                                    //Console.WriteLine($"row :  {Convert.ToString(row[x], toBase: 2).PadLeft(9, '0')}");
-                                    //Console.WriteLine($"col :  {Convert.ToString(col[y], toBase: 2).PadLeft(9, '0')}");
-                                    //Console.WriteLine($"sqr :  {Convert.ToString(sqr[GetSqrIndex(x, y)], toBase: 2).PadLeft(9, '0')}");
                                     throw new Exception("Invalid input!!!");
                                 }
-                                //row[x] |= mask;
-                                //col[y] |= mask;
-                                //sqr[GetSqrIndex(x, y)] |= mask;
+                                //write it to GridObj
                                 GridObj.setka[x, y] = v;
-                                flag1 = true;
+                                flag = true;
                             }
                         }
                     }
                 }
-                if (!flag1)
-                {
-                    break;
-                }
             }
-            GridObj.PrintToConsole();
         }
-
+        //find all valid answers to "x,y" Cell
         private static int[] GetValidGueses(int x, int y)
         {
             List<int> row = rowList[x];
-            if (row == null)
-            {
-                row = new List<int>();
-                rowList[x] = row;
-
-            }
             List<int> col = colList[y];
-            if (col == null)
-            {
-                col = new List<int>();
-                colList[y] = col;
-            }
             List<int> sqr = sqrList[GetSqrIndex(x, y)];
-            if (sqr == null)
-            {
-                sqr = new List<int>();
-                sqrList[GetSqrIndex(x, y)] = sqr;
-            }
             List<int> result = new List<int>();
-
+            //check all values from 1 to 9 for validity
             for (int i = 1; i <= 9; i++)
             {
                 bool rowOk = !row.Contains(i);
@@ -242,15 +211,16 @@ namespace SudokuSolution
                 bool allOk = (rowOk && colOk && sqrOk);
                 if (allOk)
                 {
+                    //add to list of valid answers
                     result.Add(i);
                 }
             }
             return result.ToArray();
         }
-
+        //calculates box index where cell"x,y" is located
         private static int GetSqrIndex(int x, int y)
         {
-            int a = y / 3 + ((x / 3) * 4) - x / 3;
+            int a = y / 3 + ((x / 3) * 3);
             return a;
         }
     }

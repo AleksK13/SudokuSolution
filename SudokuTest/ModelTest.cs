@@ -11,17 +11,15 @@ namespace SudokuTest
         public void CreateGridTest()
         {
             var grid = new Grid();
-            grid.FillRandomGrid();
+            grid.FillGrid();
             grid.PrintToConsole();
-            Assert.AreEqual(0, grid.setka[3, 3]);
         }
         [TestMethod]
         public void CheckValidSolution()
         {
             var grid = new Grid();
-            grid.ReadFromFile();
+            grid.ReadFromFile("Pradzia.txt");
             grid.PrintToConsole();
-            Assert.AreEqual(0, grid.setka[3, 3]);
         }
         [TestMethod]
         public void TestBitov()
@@ -71,15 +69,23 @@ namespace SudokuTest
         private int GetSqrIndex(int x, int y)
         {
             x--; y--;
-            int a = y / 3 + ((x / 3) << 2) - x / 3;
+            int a = y / 3 + ((x / 3) *3);
             return a;
         }
         [TestMethod]
         public void TestSolution()
         {
             Grid G = new Grid();
-            G.ReadFromFile();
+            G.ReadFromFile("Pradzia.txt");
             SudokuSolution.Solution.SolveGrid(G);
+            G.PrintToConsole();
+        }
+        [TestMethod]
+        public void TestBoxIndex()
+        {
+            Console.WriteLine($"{GetSqrIndex(2, 2)},{GetSqrIndex(2, 5)},{GetSqrIndex(2, 8)}");
+            Console.WriteLine($"{GetSqrIndex(5, 2)},{GetSqrIndex(5, 5)},{GetSqrIndex(5, 8)}");
+            Console.WriteLine($"{GetSqrIndex(7, 2)},{GetSqrIndex(7, 5)},{GetSqrIndex(9, 9)}");
         }
     }
 }
